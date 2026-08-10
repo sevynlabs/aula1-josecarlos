@@ -21,8 +21,6 @@ function CTA({ children = "QUERO GARANTIR MEU ACESSO" }: { children?: React.Reac
 
 export default function Home() {
   return <main>
-    <nav className="nav"><a className="logo-wrap" href="#aula"><img src="/logo-jose.png" alt="Escola de Incorporadores" /></a><a href="#aula">A aula</a><a href="#metodo">Método 5/20</a><CTA>GARANTIR ACESSO · R$ 27</CTA></nav>
-
     <section className="hero" id="aula"><div className="hero-grid" /><div className="hero-photo"><img src="/jose-carlos.jpg" alt="José Carlos Cardoso" /></div><div className="hero-content"><div className="eyebrow">AULA ONLINE AO VIVO <i /> QUINTA-FEIRA, 13 DE AGOSTO</div><h1>O PROBLEMA<br /><em>DA OBRA ÚNICA</em></h1><p className="hero-lead">Você sabe construir.<br /><strong>Mas talvez ainda não tenha construído o modelo que permite crescer.</strong></p><p className="hero-copy">Descubra por que tantos construtores competentes continuam presos a uma obra por vez, ao próprio capital e a uma operação que depende deles para tudo — e conheça o método que José Carlos desenvolveu para transformar construção em um verdadeiro negócio de incorporação.</p><div className="hero-bottom"><div><span className="price-label">ACESSO À AULA</span><span className="price">R$ 27</span></div><CTA /><div className="byline">COM JOSÉ CARLOS CARDOSO<br /><span>Criador do Método 5/20 · CEO do Grupo Haja · +10 anos de mercado</span></div></div></div></section>
 
     <section className="statement"><p className="eyebrow">A PERGUNTA QUE MUDA TUDO</p><h2>Talvez o problema não seja<br /><em>falta de capital.</em></h2><div className="statement-line" /><p>É falta de <b>método + modelo de negócio + capital estruturado + gestão + ecossistema.</b></p></section>
