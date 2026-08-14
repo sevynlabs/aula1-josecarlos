@@ -36,7 +36,7 @@ export default function Home() {
     event.preventDefault();
     const finalDiagnosis = answers.filter((a) => a === 0 || a === 1).length >= 3 ? "Você está no ciclo da obra única" : "Você já percebeu que precisa de um próximo modelo";
     if (captureStep < 3) { setCaptureStep(captureStep + 1); return; }
-    await fetch("https://script.google.com/macros/s/AKfycbw-H3AN7PfbWEbrucjjcniayAkWpd_FOZPJIkQblvzTQZMpy1346BCwoiwIFXFCmUlz7g/exec", { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ ...lead, diagnostico: finalDiagnosis, respostas: answers.map((answer, index) => `${questions[index].title}: ${questions[index].options[answer]}`), concluido: "Sim" }) });
+    await fetch("https://script.google.com/macros/s/AKfycbzcuoH2Sz-TosHnGRNUPAmyqeevEfBBpIKUIdZw6obzZVln6I0z5hTXS0Nc7yaq6toCSA/exec", { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ ...lead, diagnostico: finalDiagnosis, respostas: answers.map((answer, index) => `${questions[index].title}: ${questions[index].options[answer]}`), concluido: "Sim" }) });
     setCaptureStep(-1);
   }
   async function registerLead(event: React.FormEvent<HTMLFormElement>) {
