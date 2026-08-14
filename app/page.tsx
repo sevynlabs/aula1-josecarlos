@@ -12,6 +12,10 @@ const questions = [
 
 export default function Home() {
   const [step, setStep] = useState(-1);
+  const [registered, setRegistered] = useState(false);
+  const [lead, setLead] = useState({ nome: "", email: "", whatsapp: "", perfil: "" });
+  const [sending, setSending] = useState(false);
+  const [formError, setFormError] = useState("");
   const [answers, setAnswers] = useState<number[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
   const current = questions[step];
@@ -21,10 +25,21 @@ export default function Home() {
   function choose(index: number) { setSelected(index); }
   function next() { if (selected === null) return; setAnswers([...answers, selected]); setSelected(null); setStep(step + 1); }
   function restart() { setStep(-1); setAnswers([]); setSelected(null); }
+  async function registerLead(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSending(true);
+    setFormError("");
+    try {
+      await fetch("https://script.google.com/macros/s/AKfycbw-H3AN7PfbWEbrucjjcniayAkWpd_FOZPJIkQblvzTQZMpy1346BCwoiwIFXFCmUlz7g/exec", { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(lead) });
+      setRegistered(true);
+    } catch { setFormError("Não foi possível enviar seus dados. Tente novamente."); }
+    finally { setSending(false); }
+  }
 
   return <main className="quiz-shell">
     <div className="quiz-top"><img src="/logo-light-jose.png" alt="Escola de Incorporadores" /><span>DIAGNÓSTICO GRATUITO</span></div>
-    {step < 0 && <section className="quiz-intro"><div className="intro-copy"><span className="eyebrow">UM DIAGNÓSTICO RÁPIDO SOBRE SUA OPERAÇÃO</span><h1>Você está construindo<br /><em>uma obra</em> ou um negócio?</h1><p>Responda 5 perguntas e descubra o que pode estar por trás da sensação de que, para construir mais, você precisa sempre começar do zero.</p><button className="gold-button" onClick={() => setStep(0)}>COMEÇAR DIAGNÓSTICO <b>→</b></button><small>Leva menos de 2 minutos · sem respostas certas ou erradas</small></div><div className="intro-portrait"><img src="/jose-carlos.jpg" alt="José Carlos Cardoso" /><div className="portrait-card"><b>5/20</b><span>O método por trás<br />de um novo modelo</span></div></div></section>}
+    {step < 0 && !registered && <section className="quiz-intro"><div className="intro-copy"><span className="eyebrow">ANTES DE COMEÇAR</span><h1>Vamos entender<br /><em>sua operação.</em></h1><p>Preencha seus dados para receber seu diagnóstico e acessar as perguntas sobre o seu momento no mercado imobiliário.</p><form className="lead-form" onSubmit={registerLead}><input required value={lead.nome} onChange={(e) => setLead({ ...lead, nome: e.target.value })} placeholder="Seu nome" /><input required type="email" value={lead.email} onChange={(e) => setLead({ ...lead, email: e.target.value })} placeholder="Seu melhor e-mail" /><input required value={lead.whatsapp} onChange={(e) => setLead({ ...lead, whatsapp: e.target.value })} placeholder="Seu WhatsApp" /><select required value={lead.perfil} onChange={(e) => setLead({ ...lead, perfil: e.target.value })}><option value="">Qual é o seu perfil?</option><option>Construtor</option><option>Arquiteto</option><option>Engenheiro</option><option>Corretor de imóveis</option><option>Investidor</option></select><button className="gold-button" disabled={sending}>{sending ? "ENVIANDO..." : "COMEÇAR DIAGNÓSTICO"} <b>→</b></button>{formError && <small className="form-error">{formError}</small>}</form><small>Seus dados serão usados apenas para enviar o diagnóstico e os avisos da aula.</small></div><div className="intro-portrait"><img src="/jose-carlos.jpg" alt="José Carlos Cardoso" /><div className="portrait-card"><b>5/20</b><span>O método por trás<br />de um novo modelo</span></div></div></section>}
+    {step < 0 && registered && <section className="quiz-intro"><div className="intro-copy"><span className="eyebrow">CADASTRO CONFIRMADO</span><h1>Agora vamos descobrir<br /><em>seu momento.</em></h1><p>Responda 5 perguntas rápidas e entenda o que pode estar por trás da sensação de que, para construir mais, você precisa sempre começar do zero.</p><button className="gold-button" onClick={() => setStep(0)}>INICIAR DIAGNÓSTICO <b>→</b></button><small>Leva menos de 2 minutos · sem respostas certas ou erradas</small></div><div className="intro-portrait"><img src="/jose-carlos.jpg" alt="José Carlos Cardoso" /><div className="portrait-card"><b>5/20</b><span>O método por trás<br />de um novo modelo</span></div></div></section>}
     {step >= 0 && step < questions.length && <section className="question-stage"><div className="progress-row"><span>PERGUNTA {String(step + 1).padStart(2, "0")} DE {String(questions.length).padStart(2, "0")}</span><span>{Math.round(progress)}%</span></div><div className="progress"><i style={{ width: `${progress}%` }} /></div><div className="question-card"><span className="eyebrow">{current.tag}</span><h2>{current.title}</h2><div className="options">{current.options.map((option, index) => <button key={option} className={selected === index ? "option selected" : "option"} onClick={() => choose(index)}><span>{String.fromCharCode(65 + index)}</span>{option}<b>→</b></button>)}</div><button className="next-button" disabled={selected === null} onClick={next}>{step === questions.length - 1 ? "VER MEU RESULTADO" : "CONTINUAR"}<b>→</b></button></div></section>}
     {step >= questions.length && <section className="result-stage"><span className="eyebrow">SEU DIAGNÓSTICO</span><div className="result-number">0{questions.length}</div><h2>{result}</h2><p>A obra única pode ser apenas o sintoma. Quando método, modelo de negócio, capital, gestão e ecossistema não estão conectados, cada nova operação parece começar do zero.</p><div className="result-insight"><span>O PRÓXIMO PASSO</span><strong>Conhecer a lógica do Método 5/20</strong><small>Uma forma de organizar as peças de uma incorporação sem depender apenas do seu próprio capital.</small></div><a className="gold-button link-button" href="https://pay.hotmart.com/U107160255C?bid=1786714100510" target="_blank" rel="noreferrer">QUERO CONHECER A AULA <b>→</b></a><button className="restart" onClick={restart}>Refazer diagnóstico</button></section>}
     {step >= 0 && step < questions.length && <div className="quiz-footer"><span>ESCOLA DE INCORPORADORES</span><span>JOSÉ CARLOS CARDOSO</span></div>}
